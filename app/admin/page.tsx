@@ -11,6 +11,44 @@ const emptyProject = { title: '', description: '', imageUrl: '', liveUrl: '', gi
 export default function AdminPage() {
   const [form, setForm] = useState<PortfolioContent | null>(null);
   const [status, setStatus] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const savedPassword = window.localStorage.getItem('portfolio-admin-password');
+    if (savedPassword) {
+      setPassword(savedPassword);
+      verifyPassword(savedPassword);
+      return;
+    }
+
+    setIsCheckingAuth(false);
+  }, []);
+
+  const verifyPassword = async (value: string) => {
+    setIsCheckingAuth(true);
+    const response = await fetch('/api/admin/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: value }),
+    });
+
+    if (response.ok) {
+      window.localStorage.setItem('portfolio-admin-password', value);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      setStatus('Access denied. Use the correct admin password.');
+    }
+
+    setIsCheckingAuth(false);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await verifyPassword(password);
+  };
 
   useEffect(() => {
     fetch('/api/portfolio')
@@ -18,6 +56,30 @@ export default function AdminPage() {
       .then((data) => setForm(data))
       .catch(() => setStatus('Unable to load portfolio data.'));
   }, []);
+
+  if (isCheckingAuth) {
+    return <div style={{ padding: '2rem' }}>Checking access...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <main style={{ maxWidth: '500px', margin: '0 auto', padding: '3rem 1.25rem', fontFamily: 'Arial, sans-serif' }}>
+        <h1>Admin Access</h1>
+        <p>Enter the admin password to edit this portfolio.</p>
+        <form onSubmit={handleLogin} style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Admin password"
+            style={inputStyle}
+          />
+          <button type="submit" style={buttonStyle}>Access Admin</button>
+        </form>
+        {status ? <p style={{ marginTop: '1rem', color: '#ef4444' }}>{status}</p> : null}
+      </main>
+    );
+  }
 
   if (!form) {
     return <div style={{ padding: '2rem' }}>Loading admin panel...</div>;
@@ -105,8 +167,19 @@ export default function AdminPage() {
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.25rem', fontFamily: 'Arial, sans-serif' }}>
       <h1>Admin Dashboard</h1>
-      <p>Customize each section and subsection of your portfolio here. No authentication is required for now.</p>
+      <p>Customize each section and subsection of your portfolio here.</p>
       <p style={{ color: '#4f46e5' }}>{status}</p>
+      <button
+        onClick={() => {
+          window.localStorage.removeItem('portfolio-admin-password');
+          setPassword('');
+          setIsAuthenticated(false);
+          setStatus('Logged out.');
+        }}
+        style={{ ...dangerButtonStyle, marginTop: '0.75rem' }}
+      >
+        Logout
+      </button>
 
       <section style={{ marginTop: '1.5rem', display: 'grid', gap: '1rem' }}>
         <label>Name<input value={form.name} onChange={(e) => updateField('name', e.target.value)} style={inputStyle} /></label>
