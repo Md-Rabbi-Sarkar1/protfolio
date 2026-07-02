@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getPortfolioContent } from '@/lib/portfolio-service';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const data = await getPortfolioContent();
 
