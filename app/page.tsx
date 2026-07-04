@@ -8,14 +8,17 @@ export default async function HomePage() {
 
   return (
     <main style={{ fontFamily: 'Arial, sans-serif', lineHeight: 1.6, color: '#111827' }}>
-      <section style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <section id="home" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
         <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ fontWeight: 700, fontSize: '1.25rem' }}>{data.name}</div>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <a href="#home" style={{ color: '#111827', textDecoration: 'none' }}>Home</a>
             <a href="#about" style={{ color: '#111827', textDecoration: 'none' }}>About</a>
             <a href="#skills" style={{ color: '#111827', textDecoration: 'none' }}>Skills</a>
             <a href="#education" style={{ color: '#111827', textDecoration: 'none' }}>Education</a>
-            <a href="#experience" style={{ color: '#111827', textDecoration: 'none' }}>Experience</a>
+            {data.sections.map((section) => (
+              <a key={section.id} href={`#${section.id}`} style={{ color: '#111827', textDecoration: 'none' }}>{section.title || 'Section'}</a>
+            ))}
             <a href="#projects" style={{ color: '#111827', textDecoration: 'none' }}>Projects</a>
             <a href="#contact" style={{ color: '#111827', textDecoration: 'none' }}>Contact</a>
             <Link href="/admin" style={{ color: '#4f46e5', textDecoration: 'none' }}>Admin</Link>
@@ -76,19 +79,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="experience" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Experience</h2>
-        <div style={{ display: 'grid', gap: '1rem' }}>
-          {data.experience.map((item) => (
-            <div key={item.role} style={{ border: '1px solid #e5e7eb', borderRadius: '1rem', padding: '1.25rem', background: '#fff' }}>
-              <h3 style={{ margin: 0 }}>{item.role}</h3>
-              <p style={{ margin: '0.25rem 0', color: '#4f46e5' }}>{item.company} • {item.period}</p>
-              <p style={{ color: '#4b5563', marginBottom: 0 }}>{item.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section id="projects" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Projects</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
@@ -102,6 +92,13 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {data.sections.map((section) => (
+        <section key={section.id} id={section.id} style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>{section.title}</h2>
+          <p style={{ color: '#4b5563', whiteSpace: 'pre-wrap' }}>{section.content}</p>
+        </section>
+      ))}
 
       <section id="contact" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>{data.contactHeading}</h2>

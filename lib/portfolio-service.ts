@@ -32,6 +32,12 @@ export interface ProjectItem {
   link: string;
 }
 
+export interface CustomSection {
+  id: string;
+  title: string;
+  content: string;
+}
+
 export interface PortfolioContent {
   name: string;
   title: string;
@@ -50,6 +56,7 @@ export interface PortfolioContent {
   education: EducationItem[];
   experience: ExperienceItem[];
   projects: ProjectItem[];
+  sections: CustomSection[];
   contactHeading: string;
   footerText: string;
 }
@@ -87,6 +94,7 @@ const defaultContent: PortfolioContent = {
     { title: 'Analytics Dashboard', description: 'A data visualization app with actionable business insights.', imageUrl: '', liveUrl: 'https://example.com', githubUrl: 'https://github.com', technologies: 'React, Express, PostgreSQL', challenges: 'Complex data shaping for charts and filters.', improvements: 'Add real-time updates and export support.', link: '/projects/analytics' },
     { title: 'Task Collaboration Hub', description: 'A collaborative workspace for remote product teams.', imageUrl: '', liveUrl: 'https://example.com', githubUrl: 'https://github.com', technologies: 'Next.js, Node.js, Prisma', challenges: 'Maintaining real-time collaboration reliability.', improvements: 'Add notifications and file sharing.', link: '/projects/collab' },
   ],
+  sections: [],
   contactHeading: 'Let’s build something meaningful together.',
   footerText: '© 2026 Your Name. Built with Next.js, Express, Prisma, and TypeScript.',
 };
@@ -109,6 +117,7 @@ function normalizeContent(input: Partial<PortfolioContent> | null | undefined): 
     education: Array.isArray(input?.education) ? input!.education : defaultContent.education,
     experience: Array.isArray(input?.experience) ? input!.experience : defaultContent.experience,
     projects: Array.isArray(input?.projects) ? input!.projects : defaultContent.projects,
+    sections: Array.isArray(input?.sections) ? input!.sections : defaultContent.sections,
   };
 }
 
@@ -157,6 +166,7 @@ export async function savePortfolioContent(content: PortfolioContent): Promise<P
           education: normalized.education as never,
           experience: normalized.experience as never,
           projects: normalized.projects as never,
+          sections: normalized.sections as never,
           contactHeading: normalized.contactHeading,
           footerText: normalized.footerText,
         },
@@ -181,6 +191,7 @@ export async function savePortfolioContent(content: PortfolioContent): Promise<P
           education: normalized.education as never,
           experience: normalized.experience as never,
           projects: normalized.projects as never,
+          sections: normalized.sections as never,
           contactHeading: normalized.contactHeading,
           footerText: normalized.footerText,
         },

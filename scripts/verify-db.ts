@@ -19,6 +19,7 @@ async function main() {
     education: [{ degree: 'BSc', institution: 'Demo University', year: '2024', description: 'Demo' }],
     experience: [{ role: 'Developer', company: 'Demo', period: '2024', description: 'Demo' }],
     projects: [{ title: 'Demo Project', description: 'Demo', imageUrl: '', liveUrl: '', githubUrl: '', technologies: 'Next.js', challenges: '', improvements: '', link: '/projects/demo' }],
+    sections: [],
     contactHeading: 'Contact',
     footerText: 'Footer',
   });

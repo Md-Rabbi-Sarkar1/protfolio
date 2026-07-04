@@ -8,6 +8,16 @@ const emptyEducation = { degree: '', institution: '', year: '', description: '' 
 const emptyExperience = { role: '', company: '', period: '', description: '' };
 const emptyProject = { title: '', description: '', imageUrl: '', liveUrl: '', githubUrl: '', technologies: '', challenges: '', improvements: '', link: '' };
 
+const slugify = (value: string, fallback: string) => {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+  return slug || fallback;
+};
+
 export default function AdminPage() {
   const [form, setForm] = useState<PortfolioContent | null>(null);
   const [status, setStatus] = useState('');
@@ -149,6 +159,24 @@ export default function AdminPage() {
     setForm((prev) => prev ? { ...prev, projects } : prev);
   };
 
+  const updateSection = (index: number, field: 'title' | 'content', value: string) => {
+    const sections = [...form.sections];
+    sections[index] = { ...sections[index], [field]: value };
+    setForm((prev) => prev ? { ...prev, sections } : prev);
+  };
+
+  const addSection = () => {
+    setForm((prev) => prev ? {
+      ...prev,
+      sections: [...prev.sections, { id: slugify('', `section-${prev.sections.length + 1}`), title: '', content: '' }],
+    } : prev);
+  };
+
+  const removeSection = (index: number) => {
+    const sections = form.sections.filter((_, i) => i !== index);
+    setForm((prev) => prev ? { ...prev, sections } : prev);
+  };
+
   const save = async () => {
     setStatus('Saving...');
     const response = await fetch('/api/portfolio', {
@@ -247,6 +275,22 @@ export default function AdminPage() {
           </div>
         ))}
         <button onClick={addExperience} style={buttonStyle}>Add Experience</button>
+      </section>
+
+      <section style={{ marginTop: '2rem' }}>
+        <h2>Custom Sections</h2>
+        <p style={{ color: '#6b7280', marginBottom: '1rem' }}>Add sections like Services, Testimonials, Clients, or anything else here. They will appear on the homepage and in the navbar automatically.</p>
+        {form.sections.map((section, index) => (
+          <div key={section.id || index} style={{ border: '1px solid #e5e7eb', borderRadius: '1rem', padding: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong>Section #{index + 1}</strong>
+              <button onClick={() => removeSection(index)} style={dangerButtonStyle}>Remove</button>
+            </div>
+            <input value={section.title} onChange={(e) => updateSection(index, 'title', e.target.value)} style={{ ...inputStyle, marginBottom: '0.75rem' }} placeholder="Section title" />
+            <textarea value={section.content} onChange={(e) => updateSection(index, 'content', e.target.value)} style={{ ...inputStyle, minHeight: '100px' }} placeholder="Section content" />
+          </div>
+        ))}
+        <button onClick={addSection} style={buttonStyle}>Add Custom Section</button>
       </section>
 
       <section style={{ marginTop: '2rem' }}>

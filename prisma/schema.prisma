@@ -8,26 +8,27 @@ datasource db {
 }
 
 model PortfolioContent {
-  id            Int      @id @default(autoincrement())
-  name          String
-  title         String
-  heroSubtitle  String
-  bio           String
-  about         String
-  email         String
-  phone         String
-  whatsapp      String
-  resumeUrl     String
-  imageUrl      String
-  githubUrl     String
-  linkedinUrl   String
-  twitterUrl    String
-  skills        Json
-  education     Json
-  experience    Json
-  projects      Json
+  id             Int      @id @default(autoincrement())
+  name           String
+  title          String
+  heroSubtitle   String
+  bio            String
+  about          String
+  email          String
+  phone          String
+  whatsapp       String
+  resumeUrl      String
+  imageUrl       String
+  githubUrl      String
+  linkedinUrl    String
+  twitterUrl     String
+  skills         Json
+  education      Json
+  experience     Json
+  projects       Json
+  sections       Json     @default("[]")
   contactHeading String
-  footerText    String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  footerText     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
