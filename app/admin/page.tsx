@@ -161,7 +161,12 @@ export default function AdminPage() {
 
   const updateSection = (index: number, field: 'title' | 'content', value: string) => {
     const sections = [...form.sections];
-    sections[index] = { ...sections[index], [field]: value };
+    const current = sections[index];
+    sections[index] = {
+      ...current,
+      [field]: value,
+      ...(field === 'title' ? { id: slugify(value, current.id || `section-${index + 1}`) } : {}),
+    };
     setForm((prev) => prev ? { ...prev, sections } : prev);
   };
 
