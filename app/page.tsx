@@ -5,6 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const data = await getPortfolioContent();
+  const hasExperience = data.experience.some((item) =>
+    [item.role, item.company, item.period, item.description].some((value) => value?.trim())
+  );
 
   return (
     <main style={{ fontFamily: 'Arial, sans-serif', lineHeight: 1.6, color: '#111827' }}>
@@ -16,6 +19,7 @@ export default async function HomePage() {
             <a href="#about" style={{ color: '#111827', textDecoration: 'none' }}>About</a>
             <a href="#skills" style={{ color: '#111827', textDecoration: 'none' }}>Skills</a>
             <a href="#education" style={{ color: '#111827', textDecoration: 'none' }}>Education</a>
+            {hasExperience ? <a href="#experience" style={{ color: '#111827', textDecoration: 'none' }}>Experience</a> : null}
             {data.sections.map((section) => (
               <a key={section.id} href={`#${section.id}`} style={{ color: '#111827', textDecoration: 'none' }}>{section.title || 'Section'}</a>
             ))}
@@ -78,6 +82,21 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {hasExperience ? (
+        <section id="experience" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Experience</h2>
+          <div style={{ display: 'grid', gap: '1rem' }}>
+            {data.experience.map((item) => (
+              <div key={item.role} style={{ border: '1px solid #e5e7eb', borderRadius: '1rem', padding: '1.25rem', background: '#fff' }}>
+                <h3 style={{ margin: 0 }}>{item.role}</h3>
+                <p style={{ margin: '0.25rem 0', color: '#4f46e5' }}>{item.company} • {item.period}</p>
+                <p style={{ color: '#4b5563', marginBottom: 0 }}>{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section id="projects" style={{ padding: '4rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Projects</h2>
