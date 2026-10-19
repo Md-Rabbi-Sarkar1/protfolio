@@ -14,12 +14,12 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
-
+//see protfolio
 app.get('/api/portfolio', async (_req, res) => {
   const content = await getPortfolioContent();
   res.json(content);
 });
-
+ //post protfolio data
 app.post('/api/portfolio', async (req, res) => {
   try {
     const saved = await savePortfolioContent(req.body);
